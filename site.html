@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <title>Fina Estampa — Coleção Premium</title>
+
+  <style>
+    /* ========================================
+       RESET & BASE
+       ======================================== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Playfair Display', serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #fff;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      background: #000;
+    }
+
+    /* ========================================
+       FUNDO
+       ======================================== */
+    .bg-media {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .bg-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+    }
+
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(to bottom,
+          rgba(0, 0, 0, 0.5) 0%,
+          rgba(0, 0, 0, 0.4) 40%,
+          rgba(0, 0, 0, 0.98) 100%);
+    }
+
+    /* ========================================
+       PAGE WRAPPER
+       ======================================== */
+    .page {
+      position: relative;
+      z-index: 10;
+      min-height: 100dvh;
+      padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* ========================================
+       GLASS
+       ======================================== */
+    .glass {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ========================================
+       BOTÃO VOLTAR
+       ======================================== */
+    .btn-back {
+      position: fixed;
+      top: max(16px, env(safe-area-inset-top, 16px));
+      left: 16px;
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 99px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: transform 0.18s ease;
+      background: rgba(212, 175, 55, 0.2);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+    }
+
+    .btn-back:active {
+      transform: scale(0.96);
+    }
+
+    .btn-back svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ========================================
+       HERO
+       ======================================== */
+    .hero {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 24px 60px;
+      gap: 16px;
+    }
+
+    .hero-logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(212, 175, 55, 0.4);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 8vw, 42px);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1.1;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .hero p {
+      font-size: 16px;
+      opacity: 0.85;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    /* ========================================
+       SECTIONS
+       ======================================== */
+    .section {
+      padding: 0 20px;
+      margin-bottom: 24px;
+    }
+
+    /* ========================================
+       SOBRE NÓS
+       ======================================== */
+    .about-card {
+      border-radius: 28px;
+      padding: 32px 24px;
+      margin-top: -30px;
+      border-left: 4px solid #d4af37;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+      color: #d4af37;
+    }
+
+    .about-text {
+      font-size: 14.5px;
+      opacity: 0.85;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: #f3e5ab;
+    }
+
+    /* ========================================
+       CUPOM DESTAQUE
+       ======================================== */
+    .coupon-card {
+      margin: 0 20px 24px;
+      border-radius: 24px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border: 1.5px dashed rgba(212, 175, 55, 0.5);
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .coupon-code {
+      font-size: 20px;
+      font-weight: 700;
+      color: #d4af37;
+      letter-spacing: 1.5px;
+    }
+
+    /* ========================================
+       CATEGORIAS (GRID)
+       ======================================== */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      padding: 0 20px;
+    }
+
+    .product-card {
+      border-radius: 24px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+    }
+
+    .product-card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .product-name {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .btn-reserve {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 16px;
+      text-decoration: none;
+      color: #000;
+      font-size: 13px;
+      font-weight: 700;
+      background: #d4af37;
+      transition: transform 0.2s;
+    }
+
+    .btn-reserve:active { transform: scale(0.96); }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+    footer {
+      text-align: center;
+      font-size: 11px;
+      opacity: 0.5;
+      padding: 40px 20px;
+    }
+
+    footer a { color: #d4af37; text-decoration: none; }
+
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="bg-media">
+    <img src="Instagram/671769698_18396244486158437_8723335835769817171_n.jpg" alt="" aria-hidden="true">
+  </div>
+  <div class="bg-overlay"></div>
+
+  <a href="index.html" class="btn-back" aria-label="Voltar para o início">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    </svg>
+    Voltar
+  </a>
+
+  <div class="page">
+
+    <section class="hero">
+      <img class="hero-logo" src="logo.png" alt="Fina Estampa Logo">
+      <h1 style="font-family: 'Playfair Display', serif;">Fina Estampa</h1>
+      <p>Moda Sophistiquée por Fabiana & Geovana</p>
+    </section>
+
+    <div class="section">
+      <div class="about-card glass">
+        <h2 class="section-title">A Marca Fina Estampa</h2>
+        <p class="about-text">
+          A Fina Estampa é sinônimo de elegância e exclusividade. Nossa curadoria em Uberlândia traz o que há de mais sofisticado na moda feminina, com peças que exalam confiança e estilo.
+        </p>
+        <div class="tags">
+          <span class="tag">Luxo</span>
+          <span class="tag">Exclusividade</span>
+          <span class="tag">Uberlândia Shopping</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="coupon-card">
+      <div class="coupon-info">
+        <p style="font-size: 11px; text-transform: uppercase; opacity: 0.7;">Primeira Compra</p>
+        <p class="coupon-code">FINA10</p>
+        <p style="font-size: 12px; opacity: 0.8;">Ganhe 10% OFF no seu primeiro look</p>
+      </div>
+    </div>
+
+    <h2 style="padding: 0 20px 16px; font-size: 22px; font-weight: 700; color: #d4af37; text-align: center;">Nossa Coleção</h2>
+    
+    <div class="cards-grid">
+      <!-- Foto 1 -->
+      <div class="product-card glass">
+        <img src="Instagram/516922742_18356937676158437_647627681366921774_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Elegância Urbana</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+      <!-- Foto 2 -->
+      <div class="product-card glass">
+        <img src="Instagram/520196045_18358229065158437_4192579004874575144_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Sofisticação Midi</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+      <!-- Foto 3 -->
+      <div class="product-card glass">
+        <img src="Instagram/552561722_18366184945158437_4928388745108392154_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Estilo & Fluidez</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+      <!-- Foto 4 -->
+      <div class="product-card glass">
+        <img src="Instagram/541920087_1823339428619365_6127301237263433525_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Toque de Seda</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+      <!-- Foto 5 -->
+      <div class="product-card glass">
+        <img src="Instagram/483375095_18343793362158437_693904891572435093_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Clássico Atemporal</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+      <!-- Foto 6 -->
+      <div class="product-card glass">
+        <img src="Instagram/481125676_18342012214158437_5477220523846337047_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Modernidade</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+      <!-- Foto 7 -->
+      <div class="product-card glass">
+        <img src="Instagram/503287074_18353239036158437_1316715417503110302_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Elegância Redefinida</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+      <!-- Foto 8 -->
+      <div class="product-card glass">
+        <img src="Instagram/503422968_18353814124158437_2654007623679020604_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Minimalismo Chic</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+      <!-- Foto 9 -->
+      <div class="product-card glass">
+        <img src="Instagram/517941028_18357438649158437_2805290597887802396_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Tendência & Brilho</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+      <!-- Foto 10 -->
+      <div class="product-card glass">
+        <img src="Instagram/539400510_18362516683158437_5332563622200175233_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Estilo Urbano</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+      <!-- Foto 11 -->
+      <div class="product-card glass">
+        <img src="Instagram/539473333_18362516131158437_5134653026278076783_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Cores Vibrantes</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+      <!-- Foto 12 -->
+      <div class="product-card glass">
+        <img src="Instagram/551313068_18365814379158437_5915755580593809523_n.jpg" alt="Fina Estampa Look">
+        <div class="product-card-body">
+          <p class="product-name">Look de Milhões</p>
+          <a href="https://api.whatsapp.com/send?phone=5534998102126&text=Olá!+Gostei+desse+look+que+vi+no+site." class="btn-reserve">Tenho Interesse</a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>© 2025 Fina Estampa · Uberlândia, MG</p>
+      <p>Desenvolvido por <a href="https://api.whatsapp.com/send?phone=5534997101300" target="_blank" rel="noopener noreferrer">Agência Avestra</a></p>
+    </footer>
+
+  </div>
+
+</body>
+
+</html>
